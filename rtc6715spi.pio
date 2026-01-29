@@ -1,0 +1,51 @@
+// Copyright 2025 The Embedded Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+.pio_version 1
+
+// Each RTC6715 signal can be freely assigned to any pin because each signal uses
+// different SM pin mapping:
+// - SPIDATA uses IN and OUT mapping,
+// - SPICLK uses SIDE_SET mapping,
+// - SPILE uses SET mapping.
+.program rtc6715spi
+	.out      1 right
+	.in       1 right auto
+	.set      1
+	.side_set 1 opt
+
+again:
+	set pins, 1
+	set pins, 0
+	jmp again
+
+start:
+	set pins, 1        // set SPILE high (end of previous transaction)
+	mov pindirs, !null // set SPIDATA as output
+	pull block         // wait for next command
+	set pins, 0        // set SPILE low (start new transaction)
+
+	out x, 1        // command type (copy of the R/W bit) to x
+	jmp !x, readCmd
+
+	set y, 24 // send whole write command to SPIDATA (25 bits: address, R/W, data)
+allOut:
+	out pins, 1     side 0
+	jmp y--, allOut side 1
+	jmp start side 0
+
+readCmd:
+	set y, 4 // send 5 bits of the read command to SPIDATA (address, R/W)
+addrRWOut:
+	out pins, 1        side 0
+	jmp y--, addrRWOut side 1
+
+	mov pindirs, null // set SPIDATA as input
+	set y, 18 side 0  // receive 20 data bits from SPIDATA
+dataIn:
+	in pins, 1      side 1
+	jmp y--, dataIn side 0
+	in pins, 1
+	in null, 12 // shift the received 20 bits right in ISR (it triggers auto-push)
+
