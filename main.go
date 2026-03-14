@@ -1,4 +1,4 @@
-// Copyright 2025 The Embedded Go Authors. All rights reserved.
+// Copyright 2026 Michał Derkacz. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -13,7 +13,6 @@ import (
 	"github.com/embeddedgo/pico/devboard/pico2/board/pins"
 	"github.com/embeddedgo/pico/hal/i2c"
 	"github.com/embeddedgo/pico/hal/i2c/i2c0dma"
-	"github.com/embeddedgo/pico/hal/iomux"
 	"github.com/embeddedgo/pico/hal/pio"
 	"github.com/embeddedgo/pico/hal/system/console/uartcon"
 	"github.com/embeddedgo/pico/hal/uart"
@@ -50,22 +49,16 @@ func main() {
 	_ = disp
 
 	// Video receiver
-	vrxClk.Setup(iomux.D4mA)
-	vrxClk.SetAltFunc(iomux.PIO0)
-	vrxLE.Setup(iomux.D4mA)
-	vrxLE.SetAltFunc(iomux.PIO0)
-	vrxData.Setup(iomux.D4mA | iomux.InpEn) // bidirectional signal
-	vrxData.SetAltFunc(iomux.PIO0)
-
 	pio0 := pio.Block(0)
 	pio0.SetReset(true)
 	pio0.SetReset(false)
 	pio0.Load(pioProg_rtc6715spi, 0)
-
 	sm := pio0.SM(0)
+	sm.UsePin(vrxClk, pio.Out)
+	sm.UsePin(vrxLE, pio.Out)
+	sm.UsePin(vrxData, pio.InOut)
 	sm.Configure(pioProg_rtc6715spi, 0, 0)
 	sm.SetPinBase(vrxData, vrxData, vrxLE, vrxClk)
-	sm.Exec(pio.SET(pio.PINDIRS, 1, 0))
 	sm.SetClkFreq(1e4)
 	sm.Enable()
 	printRegs(sm)

@@ -22,32 +22,29 @@ const (
 const pioProg_rtc6715spi pio.StringProgram = "" +
 	"\xff" + //             origin:    -1
 	"\x00\x01\x00" + //     CLKDIV:    1
-	"\x60\x50\x01\x40" + // EXECCTRL:  sideset=opt wrap=0-21
+	"\x60\x20\x01\x40" + // EXECCTRL:  sideset=opt wrap=0-18
 	"\x01\x00\x0d\x00" + // SHIFTCTRL: fifo=txrx out=,right,32 in=1,right,32,auto
 	"\x10\x44" + //         PINCTRL:   sideset=2 set=1 out=1
 	// Instructions:
 	//              .wrap_target
 	"\x01\xe0" + //  0:  set    pins, 1
-	"\x00\xe0" + //  1:  set    pins, 0
-	"\x00\x00" + //  2:  jmp    0
-	"\x01\xe0" + //  3:  set    pins, 1
-	"\x6b\xa0" + //  4:  mov    pindirs, ~null
-	"\xa0\x80" + //  5:  pull   block
-	"\x00\xe0" + //  6:  set    pins, 0
-	"\x21\x60" + //  7:  out    x, 1
-	"\x2d\x00" + //  8:  jmp    !x, 13
-	"\x58\xe0" + //  9:  set    y, 24
-	"\x01\x70" + // 10:  out    pins, 1         side 0
-	"\x8a\x18" + // 11:  jmp    y--, 10         side 1
-	"\x03\x10" + // 12:  jmp    3               side 0
-	"\x44\xe0" + // 13:  set    y, 4
-	"\x01\x70" + // 14:  out    pins, 1         side 0
-	"\x8e\x18" + // 15:  jmp    y--, 14         side 1
-	"\x63\xa0" + // 16:  mov    pindirs, null
-	"\x52\xf0" + // 17:  set    y, 18           side 0
-	"\x01\x58" + // 18:  in     pins, 1         side 1
-	"\x92\x10" + // 19:  jmp    y--, 18         side 0
-	"\x01\x40" + // 20:  in     pins, 1
-	"\x6c\x40" + // 21:  in     null, 12
+	"\x6b\xa0" + //  1:  mov    pindirs, ~null
+	"\xa0\x80" + //  2:  pull   block
+	"\x00\xe0" + //  3:  set    pins, 0
+	"\x21\x60" + //  4:  out    x, 1
+	"\x2a\x00" + //  5:  jmp    !x, 10
+	"\x58\xe0" + //  6:  set    y, 24
+	"\x01\x70" + //  7:  out    pins, 1         side 0
+	"\x87\x18" + //  8:  jmp    y--, 7          side 1
+	"\x00\x10" + //  9:  jmp    0               side 0
+	"\x44\xe0" + // 10:  set    y, 4
+	"\x01\x70" + // 11:  out    pins, 1         side 0
+	"\x8b\x18" + // 12:  jmp    y--, 11         side 1
+	"\x63\xa0" + // 13:  mov    pindirs, null
+	"\x52\xf0" + // 14:  set    y, 18           side 0
+	"\x01\x58" + // 15:  in     pins, 1         side 1
+	"\x8f\x10" + // 16:  jmp    y--, 15         side 0
+	"\x01\x40" + // 17:  in     pins, 1
+	"\x6c\x40" + // 18:  in     null, 12
 	//              .wrap
 	""

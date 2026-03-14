@@ -1,4 +1,4 @@
-// Copyright 2025 The Embedded Go Authors. All rights reserved.
+// Copyright 2026 Michał Derkacz. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -14,11 +14,6 @@
 	.in       1 right auto
 	.set      1
 	.side_set 1 opt
-
-again:
-	set pins, 1
-	set pins, 0
-	jmp again
 
 start:
 	set pins, 1        // set SPILE high (end of previous transaction)
