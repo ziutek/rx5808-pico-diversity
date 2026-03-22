@@ -63,9 +63,32 @@ func main() {
 	sm.Enable()
 	printRegs(sm)
 
+	regs := []string{
+		0x0: "Synthezier Reg A        ",
+		0x1: "Synthezier Reg B        ",
+		0x2: "Synthezier Reg C        ",
+		0x3: "Synthezier Reg D        ",
+		0x4: "VCO Switch-Cap Ctrl Reg ",
+		0x5: "DFC Ctrl Reg            ",
+		0x6: "6M Audio Demod Ctrl Reg ",
+		0x7: "6M5 Audio Demod Ctrl Reg",
+		0x8: "Receiver Ctrl Reg 1     ",
+		0x9: "Receiver Ctrl Reg 2     ",
+		0xa: "Power Down Ctrl Reg     ",
+		0xf: "State Reg               ",
+	}
+
 	for {
-		sm.WriteWord32(0x12345<<6 | 0b100001)
-		time.Sleep(time.Second)
+		for addr, name := range regs {
+			if name == "" {
+				continue
+			}
+			sm.WriteWord32(uint32(addr) << 1)
+			v, _ := sm.ReadWord32()
+			fmt.Printf("%#x: %s : %020b\n", addr, name, v)
+		}
+		fmt.Println("---")
+		time.Sleep(5 * time.Second)
 	}
 
 }

@@ -22,7 +22,7 @@ const (
 const pioProg_rtc6715spi pio.StringProgram = "" +
 	"\xff" + //             origin:    -1
 	"\x00\x01\x00" + //     CLKDIV:    1
-	"\x60\x20\x01\x40" + // EXECCTRL:  sideset=opt wrap=0-18
+	"\x60\x10\x01\x40" + // EXECCTRL:  sideset=opt wrap=0-17
 	"\x01\x00\x0d\x00" + // SHIFTCTRL: fifo=txrx out=,right,32 in=1,right,32,auto
 	"\x10\x44" + //         PINCTRL:   sideset=2 set=1 out=1
 	// Instructions:
@@ -44,7 +44,6 @@ const pioProg_rtc6715spi pio.StringProgram = "" +
 	"\x52\xf0" + // 14:  set    y, 18           side 0
 	"\x01\x58" + // 15:  in     pins, 1         side 1
 	"\x8f\x10" + // 16:  jmp    y--, 15         side 0
-	"\x01\x40" + // 17:  in     pins, 1
-	"\x6c\x40" + // 18:  in     null, 12
+	"\x0d\x40" + // 17:  in     pins, 13
 	//              .wrap
 	""

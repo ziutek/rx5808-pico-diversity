@@ -41,6 +41,5 @@ addrRWOut:
 dataIn:
 	in pins, 1      side 1
 	jmp y--, dataIn side 0
-	in pins, 1
-	in null, 12 // shift the received 20 bits right in ISR (it triggers auto-push)
+	in pins, 13 // last bit and 12 zeros (it triggers auto-push)
 
